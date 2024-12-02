@@ -1,0 +1,14 @@
+package com.vrd.luxury_collection.service;
+
+
+import com.vrd.luxury_collection.exception.UserException;
+import com.vrd.luxury_collection.model.User;
+
+import java.util.Optional;
+
+
+public interface UserService {
+   public User findUserById(Long userId) throws UserException;
+    public Optional<User> findUserProfileByJwt(String jwt) throws UserException;
+
+}

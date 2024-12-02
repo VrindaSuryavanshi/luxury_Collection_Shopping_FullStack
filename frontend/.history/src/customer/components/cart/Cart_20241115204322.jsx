@@ -1,0 +1,20 @@
+import React from "react";
+import CartItem from "./CartItem";
+
+const Cart = () => {
+  return (
+    <div>
+      <div className="lg:grid grid-cols-3 lg:px-16 ">
+        <div>
+          <CartItem />
+        </div>
+
+        <div className="px-5 sticky  mt-5 lg:mt-0">
+          <div className="border">right side</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Cart;
