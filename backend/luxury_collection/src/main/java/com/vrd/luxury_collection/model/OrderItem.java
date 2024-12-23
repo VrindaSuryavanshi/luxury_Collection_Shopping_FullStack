@@ -2,13 +2,18 @@ package com.vrd.luxury_collection.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
 public class OrderItem {
 
     @Id
@@ -21,6 +26,8 @@ public class OrderItem {
 
     @ManyToOne
     private Product product;
+
+    private  Long userId;
 
     private String size;
     private int quantity;

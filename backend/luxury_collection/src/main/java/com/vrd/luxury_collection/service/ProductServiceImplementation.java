@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProductServiceImplementation implements ProductService{
 
     @Autowired
@@ -32,11 +35,23 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public Product createProduct(CreateProductRequest req) {
-        Category topLevel =
-                categoryRepository.findByName(req.getTopLevelCategory());
+
+        Product product = new Product();
+        product.setTitle(req.getTitle());
+        product.setColor(req.getColor());
+        product.setDescription(req.getDescription());
+        product.setDiscountedPrice(req.getDiscountedPrice());
+        product.setDiscountPresent(req.getDiscountPresent());
+        product.setImageUrl(req.getImageUrl());
+        product.setBrand(req.getBrand());
+        product.setPrice(req.getPrice());
+        product.setSize(req.getSize());
+        product.setQuantity(req.getQuantity());
+        product.setCreateAt(LocalDateTime.now());
+
+        Category topLevel =  categoryRepository.findByName(req.getTopLevelCategory());
 
         if(topLevel==null){
-
             Category topLevelCategory = new Category();
             topLevelCategory.setName(req.getTopLevelCategory());
             topLevelCategory.setLevel(1);
@@ -71,21 +86,12 @@ public class ProductServiceImplementation implements ProductService{
             thirdLevel=categoryRepository.save(thirdLevelCategory);
         }
 
-        Product product = new Product();
-        product.setTitle(req.getTitle());
-        product.setColor(req.getColor());
-        product.setDescription(req.getDescription());
-        product.setDiscountedPrice(req.getDiscountedPrice());
-        product.setDiscountPresent(req.getDiscountedPresent());
-        product.setImgUrl(req.getImgUrl());
-        product.setBrand(req.getBrand());
-        product.setPrice(req.getPrice());
-        product.setSizes(req.getSize());
-        product.setQuantity(req.getQuantity());
+
         product.setCategory(thirdLevel);
-        product.setCreateAt(LocalDateTime.now());
+
 
         Product savedProduct = productRepository.save(product);
+        log.info("Fetched product: {}", product.getBrand());
         return savedProduct;
     }
 
@@ -93,7 +99,7 @@ public class ProductServiceImplementation implements ProductService{
     public String deleteProduct(Long ProductId) throws ProductException {
 
         Product product = findProductById(ProductId);
-        product.getSizes().clear();
+        product.getSize().clear();
         productRepository.delete(product);
 
         return "Product Deleted Successfully.....";
@@ -156,5 +162,10 @@ public class ProductServiceImplementation implements ProductService{
         Page<Product> filterProducts = new PageImpl<>(pageContent , pageable , products.size());
 
         return filterProducts;
+    }
+
+    @Override
+    public List<Product> findAllProduct() {
+        return List.of();
     }
 }

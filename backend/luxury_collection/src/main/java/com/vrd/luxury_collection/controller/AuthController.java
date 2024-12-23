@@ -2,10 +2,14 @@ package com.vrd.luxury_collection.controller;
 
 import com.vrd.luxury_collection.config.JwtProvider;
 import com.vrd.luxury_collection.exception.UserException;
+import com.vrd.luxury_collection.model.Address;
+import com.vrd.luxury_collection.model.Cart;
+import com.vrd.luxury_collection.model.PaymentInformation;
 import com.vrd.luxury_collection.model.User;
 import com.vrd.luxury_collection.repository.UserRepository;
 import com.vrd.luxury_collection.request.LoginRequest;
 import com.vrd.luxury_collection.response.AuthResponse;
+import com.vrd.luxury_collection.service.CartService;
 import com.vrd.luxury_collection.service.CustomUserServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +21,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,13 +34,17 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
     @Autowired
     private JwtProvider jwtProvider;
 
     @Autowired
     private CustomUserServiceImplementation customUserService;
 
+    @Autowired
+    CartService cartService;
     public AuthController() {
     }
 
@@ -55,7 +63,7 @@ public class AuthController {
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
 
-        Optional<User> isEmailExist = userRepository.findByEmail(email);
+        Optional<User> isEmailExist = Optional.ofNullable(userRepository.findByEmail(email));
 
         if (isEmailExist.isPresent()) {
             throw new UserException("Email is already used with another account.");
@@ -69,6 +77,7 @@ public class AuthController {
 
         User savedUser = userRepository.save(createdUser);
 
+        Cart cart =cartService.createCart(savedUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

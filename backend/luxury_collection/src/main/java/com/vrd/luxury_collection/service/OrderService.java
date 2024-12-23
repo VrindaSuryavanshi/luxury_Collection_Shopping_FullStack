@@ -6,10 +6,11 @@ import com.vrd.luxury_collection.model.Order;
 import com.vrd.luxury_collection.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
 
-    public Order createOrder(User user , Address shippingAddress);
+    public Order createOrder(Optional<User> user , Address shippingAddress);
 
     public Order findOrderById(Long OrderId) throws OrderException;
 
@@ -23,7 +24,9 @@ public interface OrderService {
 
     public Order deliveredOrder(Long orderId) throws OrderException;
 
-    public List<Order> getAllOrders();
+    public Order cancelOrder(Long orderId) throws OrderException;
+
+        public List<Order> getAllOrders();
 
     public void deleteOrder(Long orderId) throws OrderException;
 

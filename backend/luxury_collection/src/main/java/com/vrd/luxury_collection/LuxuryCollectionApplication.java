@@ -6,10 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.util.Scanner;
+
 @SpringBootApplication
-//@ComponentScan("com.vrd.config")
-//@EntityScan("com.vrd.model")
-//@EnableJpaRepositories("com.vrd.repository")
 public class LuxuryCollectionApplication {
 
 	public static void main(String[] args) {
@@ -19,6 +18,5 @@ public class LuxuryCollectionApplication {
 		System.out.println(u.toString());
 	}
 
-
-
 }
+

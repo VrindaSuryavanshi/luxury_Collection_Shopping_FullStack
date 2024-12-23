@@ -19,12 +19,14 @@ public interface ProductRepository extends JpaRepository<Product , Long> {
             "ORDER BY " +
             "CASE WHEN :sort = 'price_low' THEN p.discountedPrice END ASC, " +
             "CASE WHEN :sort = 'price_high' THEN p.discountedPrice END DESC, " +
-            "p.id") // Fallback to a stable sort by primary key
+            "p.id")
     List<Product> filterProducts(@Param("category") String category,
                                  @Param("minPrice") Integer minPrice,
                                  @Param("maxPrice") Integer maxPrice,
                                  @Param("minDiscount") Integer minDiscount,
                                  @Param("sort") String sort);
 
-
+//    @Query("SELECT new com.example.dto.Product(p.id, p.price, p.discountedPrice, p.quantity, c.id, c.name) " +
+//            "FROM Product p JOIN p.category c WHERE p.id = :id")
+//    Product findProductDTOById(@Param("id") Long id);
 }

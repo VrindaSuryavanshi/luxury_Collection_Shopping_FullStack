@@ -45,7 +45,6 @@ private LocalDateTime createdAt ;
 public User(){
 
 }
-
     public User(List<Address> addresses, LocalDateTime createdAt, String email, String firstName, String lastName, String mobile, String password, List<PaymentInformation> paymentInformation, List<Rating> ratings, List<Review> reviews, String role) {
         this.addresses = addresses;
         this.createdAt = createdAt;

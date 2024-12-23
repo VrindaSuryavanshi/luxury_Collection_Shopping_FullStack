@@ -13,9 +13,9 @@ import java.util.Optional;
 public class UserServiceImplementation implements UserService{
 
 
+    @Autowired
     private UserRepository userRepository;
-
-
+    @Autowired
     private JwtProvider jwtProvider;
 
     public UserServiceImplementation() {
@@ -27,10 +27,10 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public User findUserById(Long userId) throws UserException {
+    public Optional<User> findUserById(Long userId) throws UserException {
         Optional<User> user = userRepository.findById(userId);
         if(user.isPresent()){
-            return user.get();
+            return Optional.of(user.get());
         }
         throw new UserException("User not found with id" + userId);
     }
@@ -40,7 +40,7 @@ public class UserServiceImplementation implements UserService{
 
         String email =jwtProvider.getEmailFromToken(jwt);
 
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = Optional.ofNullable(userRepository.findByEmail(email));
 
         if(user.isEmpty()){
             throw  new UserException("User not found with this email" + email);
@@ -48,4 +48,5 @@ public class UserServiceImplementation implements UserService{
 
         return user;
     }
+
 }

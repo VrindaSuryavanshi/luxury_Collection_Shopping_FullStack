@@ -50,7 +50,7 @@ public class CartItem {
         this.cart = cart;
     }
 
-    public Integer getDiscountedPrice(int i) {
+    public Integer getDiscountedPrice() {
         return discountedPrice;
     }
 
