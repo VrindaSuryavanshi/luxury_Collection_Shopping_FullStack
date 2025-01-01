@@ -35,10 +35,9 @@ public class ProductServiceImplementation implements ProductService{
 
     @Override
     public Product createProduct(CreateProductRequest req) {
-
         Product product = new Product();
         product.setTitle(req.getTitle());
-        product.setColor(req.getColor());
+        product.setColor(req.getColor().toString());
         product.setDescription(req.getDescription());
         product.setDiscountedPrice(req.getDiscountedPrice());
         product.setDiscountPresent(req.getDiscountPresent());
@@ -49,51 +48,104 @@ public class ProductServiceImplementation implements ProductService{
         product.setQuantity(req.getQuantity());
         product.setCreateAt(LocalDateTime.now());
 
-        Category topLevel =  categoryRepository.findByName(req.getTopLevelCategory());
-
-        if(topLevel==null){
+        // Handle Top-Level Category
+        Category topLevel = categoryRepository.findByName(req.getTopLevelCategory());
+        if (topLevel == null) {
             Category topLevelCategory = new Category();
             topLevelCategory.setName(req.getTopLevelCategory());
             topLevelCategory.setLevel(1);
-
-            topLevel=categoryRepository.save(topLevelCategory);
+            topLevel = categoryRepository.save(topLevelCategory);
         }
 
-        Category secondLevel =
-                categoryRepository.findByNameAndParent(req.getSecondLevelCategory() , topLevel.getName());
-
-        if(secondLevel==null){
-
+        // Handle Second-Level Category
+        Category secondLevel = categoryRepository.findByNameAndParent(req.getSecondLevelCategory(), topLevel.getName());
+        if (secondLevel == null) {
             Category secondLevelCategory = new Category();
             secondLevelCategory.setName(req.getSecondLevelCategory());
             secondLevelCategory.setParentCategory(topLevel);
             secondLevelCategory.setLevel(2);
-
-            secondLevel=categoryRepository.save(secondLevelCategory);
+            secondLevel = categoryRepository.save(secondLevelCategory);
         }
 
-        Category thirdLevel =
-                categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),
-                        secondLevel.getName());
-
-        if(thirdLevel==null){
-
+        // Handle Third-Level Category
+        Category thirdLevel = categoryRepository.findByNameAndParent(req.getThirdLevelCategory(), secondLevel.getName());
+        if (thirdLevel == null) {
             Category thirdLevelCategory = new Category();
             thirdLevelCategory.setName(req.getThirdLevelCategory());
             thirdLevelCategory.setParentCategory(secondLevel);
             thirdLevelCategory.setLevel(3);
-
-            thirdLevel=categoryRepository.save(thirdLevelCategory);
+            thirdLevel = categoryRepository.save(thirdLevelCategory);
         }
 
-
+        // Assign Product to Category
         product.setCategory(thirdLevel);
 
-
+        // Save Product
         Product savedProduct = productRepository.save(product);
         log.info("Fetched product: {}", product.getBrand());
         return savedProduct;
     }
+
+//    public Product createProduct(CreateProductRequest req) {
+//
+//        Product product = new Product();
+//        product.setTitle(req.getTitle());
+//        product.setColor(req.getColor());
+//        product.setDescription(req.getDescription());
+//        product.setDiscountedPrice(req.getDiscountedPrice());
+//        product.setDiscountPresent(req.getDiscountPresent());
+//        product.setImageUrl(req.getImageUrl());
+//        product.setBrand(req.getBrand());
+//        product.setPrice(req.getPrice());
+//        product.setSize(req.getSize());
+//        product.setQuantity(req.getQuantity());
+//        product.setCreateAt(LocalDateTime.now());
+//
+//        Category topLevel =  categoryRepository.findByName(req.getTopLevelCategory());
+//
+//        if(topLevel==null){
+//            Category topLevelCategory = new Category();
+//            topLevelCategory.setName(req.getTopLevelCategory());
+//            topLevelCategory.setLevel(1);
+//
+//            topLevel=categoryRepository.save(topLevelCategory);
+//        }
+//
+//        Category secondLevel =
+//                categoryRepository.findByNameAndParent(req.getSecondLevelCategory() , topLevel.getName());
+//
+//        if(secondLevel==null){
+//
+//            Category secondLevelCategory = new Category();
+//            secondLevelCategory.setName(req.getSecondLevelCategory());
+//            secondLevelCategory.setParentCategory(topLevel);
+//            secondLevelCategory.setLevel(2);
+//
+//            secondLevel=categoryRepository.save(secondLevelCategory);
+//        }
+//
+//        Category thirdLevel =
+//                categoryRepository.findByNameAndParent(req.getThirdLevelCategory(),
+//                        secondLevel.getName());
+//
+//        if(thirdLevel==null){
+//
+//            Category thirdLevelCategory = new Category();
+//            thirdLevelCategory.setName(req.getThirdLevelCategory());
+//            thirdLevelCategory.setParentCategory(secondLevel);
+//            thirdLevelCategory.setLevel(3);
+//
+//            thirdLevel=categoryRepository.save(thirdLevelCategory);
+//        }
+//
+//
+//        product.setCategory(thirdLevel);
+//
+//
+//        Product savedProduct = productRepository.save(product);
+//        log.info("Fetched product: {}", product.getBrand());
+//        return savedProduct;
+//    }
 
     @Override
     public String deleteProduct(Long ProductId) throws ProductException {
@@ -132,14 +184,14 @@ public class ProductServiceImplementation implements ProductService{
     }
 
     @Override
-    public Page<Product> getAllProduct(String category, List<String> colors, List<String> sizea, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
+    public Page<Product> getAllProduct(String category, List<String> color, List<String> size, Integer minPrice, Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(pageNumber , pageSize);
 
         List<Product> products =
                 productRepository.filterProducts(category,minPrice,maxPrice,minDiscount,sort);
-        if(!colors.isEmpty()){
-            products= products.stream().filter(p->colors.stream().anyMatch(c->c.equalsIgnoreCase(p.getColor())))
+        if(!color.isEmpty()){
+            products= products.stream().filter(p->color.stream().anyMatch(c->c.equalsIgnoreCase(p.getColor())))
                     .collect(Collectors.toList());
         }
 

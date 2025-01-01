@@ -43,9 +43,9 @@ public class AdminProductController {
 
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<List<Product>> findAllProduct(){
-
         List<Product> products=productService.findAllProduct();
         return new ResponseEntity<>(products ,HttpStatus.OK);
 

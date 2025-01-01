@@ -41,6 +41,7 @@ public class CartController {
         Cart cart = cartService.findUserCart(user.get().getId());
 
         return new ResponseEntity<Cart>(cart, HttpStatus.OK);
+
     }
 
     @PutMapping("/add")
