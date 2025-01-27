@@ -11,9 +11,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddItemRequest {
 
-    private Long productID;
+    private Long productId;
     private String size;
     private int quantity;
     private Integer price;
+
+    @Override
+    public String toString() {
+        return "AddItemRequest{" +
+                "productId='" + productId + '\'' +
+                ", size='" + size + '\'' +
+                '}';
+    }
 
 }

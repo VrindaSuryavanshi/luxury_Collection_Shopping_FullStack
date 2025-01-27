@@ -35,7 +35,7 @@ public class CartServiceImplementation implements CartService {
     @Override
     public String addCartItem(Long userId, AddItemRequest req) throws ProductException {
        Cart cart = cartRepository.findByUserId(userId);
-        Product product = productService.findProductById(req.getProductID());
+        Product product = productService.findProductById(req.getProductId());
         CartItem isPresent = cartItemService.isCartItemExist(cart,product,req.getSize(),userId);
 
         if (isPresent==null){
@@ -44,12 +44,12 @@ public class CartServiceImplementation implements CartService {
             cartItem.setCart(cart);
             cartItem.setQuantity(req.getQuantity());
             cartItem.setUserId(userId);
-int price = req.getQuantity()*product.getDiscountedPrice();
-cartItem.setPrice(price);
-cartItem.setSize(req.getSize());
+           int price = req.getQuantity()*product.getDiscountedPrice();
+            cartItem.setPrice(price);
+            cartItem.setSize(req.getSize());
 
-CartItem createdCartItem = cartItemService.createCartItem(cartItem);
-cart.getCartItems().add(createdCartItem);
+            CartItem createdCartItem = cartItemService.createCartItem(cartItem);
+            cart.getCartItems().add(createdCartItem);
         }
         return "Item added to card successfully...!";
     }

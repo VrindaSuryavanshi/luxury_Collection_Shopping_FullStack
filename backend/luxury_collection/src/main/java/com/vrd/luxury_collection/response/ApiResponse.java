@@ -11,6 +11,12 @@ public class ApiResponse<T> {
     private long timestamp;
     private String path;
 
+    public ApiResponse(){}
+    public ApiResponse(boolean b, String message) {
+        this.success =b ;
+        this.message =message;
+    }
+
     // Getters and Setters
 
     public boolean isSuccess() {
