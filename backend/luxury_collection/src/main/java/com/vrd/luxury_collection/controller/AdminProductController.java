@@ -33,9 +33,9 @@ public class AdminProductController {
             return new ResponseEntity<Product>(product, HttpStatus.CREATED);
 
     }
-    @DeleteMapping("/productID/")
-    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long prpductID)throws ProductException{
-        productService.deleteProduct(prpductID);
+    @DeleteMapping("/{productID}/delete")
+    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productID)throws ProductException{
+        productService.deleteProduct(productID);
         ApiResponse res=new ApiResponse();
         res.setMessage("Product Deleted Successfully");
         res.setSuccess(true);

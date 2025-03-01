@@ -38,7 +38,9 @@ public class AppConfig {
                         CorsConfiguration cfg = new CorsConfiguration();
                         cfg.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000",
-                                "http://localhost:4200"
+                                "http://localhost:4200",
+                                "http://192.168.1.37:3000",
+                                "https://luxury-collection-shopping.vercel.app"
                         ));
                         cfg.setAllowedMethods(Collections.singletonList("*"));
                         cfg.setAllowCredentials(true);

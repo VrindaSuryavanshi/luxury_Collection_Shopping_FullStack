@@ -114,11 +114,10 @@ public class OrderServiceImplementation implements OrderService{
 
     @Override
     public Order placedOrder(Long orderId) throws OrderException {
-
         Order order = findOrderById(orderId);
         order.setOrderStatus("PLACED");
         order.getPaymentDetails().setStatus("Completed");
-        return order;
+        return orderRepository.save(order);
     }
 
     @Override
